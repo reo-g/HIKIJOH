@@ -19,7 +19,6 @@ def main():
     target_res2 = clf.sense(target_req, iterations=10, interval=0.01)
     if target_res is not None:
         target = target_res
-        break
     elif target_res2 is not None:
         target = target_res2
     if target is not None:
