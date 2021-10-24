@@ -16,7 +16,7 @@ def main():
   target = None
   while True:
     target_res = clf.sense(target_suica, iterations=10, interval=0.01)
-    target_res2 = clf.sense(target_req, iterations=10, interval=0.01)
+    target_res2 = clf.sense(target_req, iterations=1, interval=0.01)
     if target_res is not None:
         target = target_res
     elif target_res2 is not None:
