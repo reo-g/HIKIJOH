@@ -33,6 +33,7 @@ E_DELAY = 0.0005
 #Open I2C interface
 bus = smbus.SMBus(1) # Rev 2 Pi uses 1
 
+
 ### LCD control
 
 def lcd_init():
@@ -80,11 +81,22 @@ def lcd_string(message,line):
 
 
 class Servo:
+    #set servo PIN
     servo_pin = 4
+    #set switch PIN
+    switch_pin = 7
 
     def __init__(self):
         self.pi = pigpio.pi()
 
+        pi.set_mode(switch_pin, pigpio.INPUT)
+        pi.set_pull_up_down(switch_pin, pigpio.PUD_UP)
+
+    def switch_status(self):
+        if self.pi.read(switch_pin) == 1:
+            return True
+        else:
+            return False
 
     # 鍵を開ける
     def door_open(self):
@@ -174,7 +186,7 @@ def main():
                 lcd_string("  THIS CARD IS  ", LCD_LINE_1)
                 lcd_string(" NOT REGISTERED ", LCD_LINE_2)
                 while True: #5秒間ボタン入力を受け付ける
-                    if False: #ボタンの入力がされたら
+                    if servo.switch_status(): #ボタンの入力がされたら
                         lcd_string(" PLEASE TOUCH  ", LCD_LINE_1)
                         lcd_string(" REGISTERED CARD", LCD_LINE_2)
                         wait_master_time = time.time()
@@ -204,7 +216,9 @@ def main():
                 #LCDの焼け付きを防止するために消す
                 card_istouch = False
                 LCD_BACKLIGHT = 0x00  #バックライトオフ
-                lcd_byte(0x01, LCD_CMD) #表示内容クリア           
+                lcd_byte(0x01, LCD_CMD) #表示内容クリア  
+        if servo.switch_status():
+            print('close')
 
         # clf.close()
 
