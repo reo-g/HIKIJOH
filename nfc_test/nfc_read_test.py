@@ -25,7 +25,8 @@ def main():
         tag = nfc.tag.activate(clf,target)
         tag.sys = 3
         idm = binascii.hexlify(tag.idm)
-        print(idm)
+        stridm = str(idm, 'utf-8')
+        print(stridm)
         break
   clf.close()
 
