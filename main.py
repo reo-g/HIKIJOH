@@ -144,7 +144,7 @@ class NFC_CARD:
 
 class NFC_Data:
     def __init__(self):
-        self.df = pd.read_csv('data/idm.csv')
+        self.df = pd.read_csv('/home/pi/HIKIJOH/data/idm.csv')
     def check_registered(self,idm):
         if (self.df["idm"] == idm).sum() == 0: #登録されていなかったら
             return False
@@ -152,7 +152,7 @@ class NFC_Data:
             return True
     def registering_card(self,idm):
         self.df=self.df.append({'registered_date':datetime.date.today(),'idm':idm} , ignore_index=True)
-        self.df.to_csv('data/idm.csv')
+        self.df.to_csv('/home/pi/HIKIJOH/data/idm.csv')
 
 
 
