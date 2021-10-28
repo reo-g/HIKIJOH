@@ -82,9 +82,9 @@ def lcd_string(message,line):
 
 class Servo:
     #set servo PIN
-    servo_pin = 4
+    servo_pin = 18
     #set switch PIN
-    switch_pin = 7
+    switch_pin = 4
 
     def __init__(self):
         self.pi = pigpio.pi()
