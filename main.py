@@ -93,7 +93,7 @@ class Servo:
         self.pi.set_pull_up_down(Servo.switch_pin, pigpio.PUD_UP)
 
     def switch_status(self):
-        if self.pi.read(Servo.switch_pin) == 1:
+        if self.pi.read(Servo.switch_pin) == 0:
             return True
         else:
             return False
