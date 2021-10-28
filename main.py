@@ -100,14 +100,14 @@ class Servo:
 
     # 鍵を開ける
     def door_open(self):
-        self.pi.set_servo_pulsewidth(Servo.servo_pin, 2300)
+        self.pi.set_servo_pulsewidth(Servo.servo_pin, 500)
         sleep(0.2)
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
 
     # 鍵を締める
     def door_close(self):
-        self.pi.set_servo_pulsewidth(Servo.servo_pin, 700)
+        self.pi.set_servo_pulsewidth(Servo.servo_pin, 2500)
         sleep(0.2)
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
