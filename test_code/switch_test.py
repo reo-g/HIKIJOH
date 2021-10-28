@@ -3,7 +3,7 @@ import time
 
 class Switch:
     #set switch PIN
-    switch_pin = 4
+    switch_pin = 27
 
     def __init__(self):
         self.pi = pigpio.pi()

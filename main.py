@@ -84,7 +84,7 @@ class Servo:
     #set servo PIN
     servo_pin = 18
     #set switch PIN
-    switch_pin = 4
+    switch_pin = 27
 
     def __init__(self):
         self.pi = pigpio.pi()
@@ -215,6 +215,7 @@ def main():
                                     nfc_data.registering_card(ret) #元々タッチされたカードを追加する
                                     lcd_string(" THIS CARD IS  ", LCD_LINE_1)
                                     lcd_string("REGISTERED! ^o^ ", LCD_LINE_2)
+                                    sleep(1)
                                     is_timeout = True #ループから抜けるために便宜上
                                     break
                                 else:
