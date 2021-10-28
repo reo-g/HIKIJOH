@@ -98,4 +98,3 @@ except KeyboardInterrupt:
 finally:
   LCD_BACKLIGHT = 0x00  #バックライトオフ
   lcd_byte(0x01, LCD_CMD) #表示内容クリア
-  GPIO.cleanup()
