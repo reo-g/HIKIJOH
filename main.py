@@ -51,7 +51,7 @@ def lcd_byte(bits, mode):
   # bits = the data
   # mode = 1 for data
   #        0 for command
-
+  global LCD_BACKLIGHT
   bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
   bits_low = mode | ((bits<<4) & 0xF0) | LCD_BACKLIGHT
 
@@ -157,6 +157,8 @@ class NFC_Data:
 
 
 def main():
+    global LCD_BACKLIGHT
+    
     door_isopen = True
     want_close = False
     card_istouch = False
@@ -184,14 +186,16 @@ def main():
             is_timeout = False
 
             if nfc_data.check_registered(ret): #idmがすでに登録されているカードだったら
-                lcd_string("   Welcome to   ", LCD_LINE_1)
-                lcd_string(" CAMPHOR- HOUSE ", LCD_LINE_2)
                 if want_close == True and door_isopen == True:
+                    lcd_string(" GOOD BYE >_< ", LCD_LINE_1)
+                    lcd_string(" SEE YOU AGAIN ", LCD_LINE_2)
                     servo.door_close()
                     door_isopen = False
                     want_close = False
 
                 elif want_close == False and door_isopen == False:
+                    lcd_string("   Welcome to   ", LCD_LINE_1)
+                    lcd_string(" CAMPHOR- HOUSE ", LCD_LINE_2)
                     servo.door_open()
                     door_isopen = True
                     
