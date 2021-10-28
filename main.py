@@ -126,8 +126,8 @@ class NFC_CARD:
 
     def nfc_process(self):
         target = None
-        target_res = self.clf.sense(target_suica, iterations=10, interval=0.01)
-        target_res2 = self.clf.sense(target_req, iterations=1, interval=0.01)
+        target_res = self.clf.sense(self.target_suica, iterations=10, interval=0.01)
+        target_res2 = self.clf.sense(self.target_req, iterations=1, interval=0.01)
         if target_res is not None:
             target = target_res
         elif target_res2 is not None:
@@ -180,7 +180,7 @@ def main():
             card_istouch = True
             card_touched_time = time.time()
             LCD_BACKLIGHT  = 0x08  # On
-            is_timeout = False:
+            is_timeout = False
 
             if nfc_data.check_registered(ret): #idmがすでに登録されているカードだったら
                 lcd_string("   Welcome to   ", LCD_LINE_1)
