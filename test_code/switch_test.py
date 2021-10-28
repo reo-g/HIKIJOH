@@ -8,11 +8,11 @@ class Switch:
     def __init__(self):
         self.pi = pigpio.pi()
 
-        self.pi.set_mode(switch_pin, pigpio.INPUT)
-        self.pi.set_pull_up_down(switch_pin, pigpio.PUD_UP)
+        self.pi.set_mode(Switch.switch_pin, pigpio.INPUT)
+        self.pi.set_pull_up_down(Switch.switch_pin, pigpio.PUD_UP)
 
     def switch_status(self):
-        if self.pi.read(switch_pin) == 1:
+        if self.pi.read(Switch.switch_pin) == 1:
             return True
         else:
             return False
