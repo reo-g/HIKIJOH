@@ -177,7 +177,7 @@ def main():
     while True:
         ret = card.nfc_process()
         if ret is not None:
-            card_istouch = True:
+            card_istouch = True
             card_touched_time = time.time()
             LCD_BACKLIGHT  = 0x08  # On
             is_timeout = False:
