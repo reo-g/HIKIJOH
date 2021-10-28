@@ -243,6 +243,8 @@ def main():
 
         if servo.switch_status():
             if want_close != True:
+                LCD_BACKLIGHT  = 0x08  # On
+                lcd_byte(0x01, LCD_CMD) #表示内容クリア
                 lcd_string("HOUSE CLOSE MODE", LCD_LINE_1)
                 lcd_string(" TOUCH KEY ^o^ ", LCD_LINE_2)
                 want_close_time = time.time()
