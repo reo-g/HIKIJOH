@@ -101,16 +101,17 @@ class Servo:
     # 鍵を開ける
     def door_open(self):
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 500)
-        sleep(0.2)
+        sleep(1)
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
-
+        sleep(3)
     # 鍵を締める
     def door_close(self):
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 2500)
-        sleep(0.2)
+        sleep(1)
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
+        sleep(3)
 
 
 class NFC_CARD:
