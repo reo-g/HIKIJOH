@@ -171,7 +171,7 @@ def main():
     lcd_string("   Welcome to   ", LCD_LINE_1)
     lcd_string(" CAMPHOR- LOCK ", LCD_LINE_2)
 
-    sleep(2) #LCDを2秒間点灯
+    sleep(1) #LCDを1秒間点灯
     LCD_BACKLIGHT = 0x00  #バックライトオフ
     lcd_byte(0x01, LCD_CMD) #表示内容クリア
 
@@ -191,7 +191,7 @@ def main():
                     door_isopen = False
                     want_close = False
 
-                if want_close == False and door_isopen == False:
+                elif want_close == False and door_isopen == False:
                     servo.door_open()
                     door_isopen = True
                     
