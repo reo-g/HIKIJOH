@@ -158,7 +158,7 @@ class NFC_Data:
 
 def main():
     global LCD_BACKLIGHT
-    
+
     door_isopen = True
     want_close = False
     card_istouch = False
@@ -183,6 +183,7 @@ def main():
             card_istouch = True
             card_touched_time = time.time()
             LCD_BACKLIGHT  = 0x08  # On
+            lcd_byte(0x01, LCD_CMD) #表示内容クリア
             is_timeout = False
 
             if nfc_data.check_registered(ret): #idmがすでに登録されているカードだったら
