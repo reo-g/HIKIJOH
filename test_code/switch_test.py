@@ -17,7 +17,7 @@ class Switch:
         else:
             return False
 
-def main(){
+def main():
     switch = Switch()
 
     while True:
@@ -26,7 +26,7 @@ def main(){
         else:
             pass
         time.sleep(0.10)
-}
+
 
 if __name__ == '__main__':
     main()
