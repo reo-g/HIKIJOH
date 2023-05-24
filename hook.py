@@ -1,4 +1,4 @@
-from test_code.lcd_1602 import *
+from main import *
 
 def close_door_hook():
     show_datetime()
