@@ -1,4 +1,6 @@
 from main import *
+from time import sleep
+from time import gmtime, strftime
 
 def close_door_hook():
     show_datetime()
