@@ -11,6 +11,7 @@ import pandas as pd
 import datetime
 
 from test_code.hackathon_test import show_datetime
+from hook import open_door_hook, close_door_hook
 
 # Define some device parameters
 I2C_ADDR  = 0x27 # I2C device address 
@@ -107,10 +108,7 @@ class Servo:
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
         sleep(3)
-        '''
-        ハッカソンで追加したコード
-        '''
-        show_datetime()
+        open_door_hook()
 
     # 鍵を締める
     def door_close(self):
@@ -119,11 +117,7 @@ class Servo:
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
         sleep(3)
-        '''
-        ハッカソンで追加したコード
-        '''
-        show_datetime()
-
+        close_door_hook()
 
 class NFC_CARD:
     def __init__(self):
