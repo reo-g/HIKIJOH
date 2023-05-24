@@ -10,6 +10,8 @@ import smbus
 import pandas as pd
 import datetime
 
+from test_code.hackathon_test import show_datetime
+
 # Define some device parameters
 I2C_ADDR  = 0x27 # I2C device address 
 LCD_WIDTH = 16   # Maximum characters per line
@@ -105,6 +107,11 @@ class Servo:
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
         sleep(3)
+        '''
+        ハッカソンで追加したコード
+        '''
+        show_datetime()
+
     # 鍵を締める
     def door_close(self):
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 2500)
@@ -112,6 +119,10 @@ class Servo:
         # 開放
         self.pi.set_servo_pulsewidth(Servo.servo_pin, 0)
         sleep(3)
+        '''
+        ハッカソンで追加したコード
+        '''
+        show_datetime()
 
 
 class NFC_CARD:
