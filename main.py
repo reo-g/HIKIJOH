@@ -10,7 +10,6 @@ import smbus
 import pandas as pd
 import datetime
 
-from test_code.hackathon_test import show_datetime
 from hook import open_door_hook, close_door_hook
 
 # Define some device parameters
