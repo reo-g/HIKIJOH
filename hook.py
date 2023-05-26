@@ -1,6 +1,8 @@
-from main import *
+import datetime
 from time import sleep
 from time import gmtime, strftime
+
+from test_code.lcd_1602 import LCD_LINE_1, LCD_LINE_2, lcd_string
 
 def close_door_hook():
     show_datetime()
