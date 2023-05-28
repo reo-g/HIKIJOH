@@ -1,12 +1,5 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/python
-
-# 参考　https://jakejake.hatenablog.com/entry/2020/04/26/182249
-
-from time import sleep
-from time import gmtime, strftime
-import datetime
 import smbus
+from time import sleep
 
 # Define some device parameters
 I2C_ADDR  = 0x27 # I2C device address 
@@ -29,8 +22,9 @@ E_PULSE = 0.0005
 E_DELAY = 0.0005
 
 #Open I2C interface
-#bus = smbus.SMBus(0)  # Rev 1 Pi uses 0
 bus = smbus.SMBus(1) # Rev 2 Pi uses 1
+
+### LCD control
 
 def lcd_init():
   # Initialise display
@@ -47,7 +41,7 @@ def lcd_byte(bits, mode):
   # bits = the data
   # mode = 1 for data
   #        0 for command
-
+  global LCD_BACKLIGHT
   bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
   bits_low = mode | ((bits<<4) & 0xF0) | LCD_BACKLIGHT
 
@@ -74,27 +68,3 @@ def lcd_string(message,line):
   lcd_byte(line, LCD_CMD)
   for i in range(LCD_WIDTH):
     lcd_byte(ord(message[i]),LCD_CHR)
-
-def main(): #「日時」を表示
-    # Main program block
-    # Initialise display
-    lcd_init()
-    while True:
-      local_time = datetime.datetime.now()
-      lcd_string(strftime("%Y.%m.%d (%a)", gmtime()) , LCD_LINE_1)
-      lcd_string(local_time.strftime("%H:%M"), LCD_LINE_2)
-      sleep(1)
-
-      local_time = datetime.datetime.now()
-      lcd_string(strftime("%Y.%m.%d (%a)", gmtime()) , LCD_LINE_1)
-      lcd_string(local_time.strftime("%H %M"), LCD_LINE_2)
-      sleep(1)
-
-try:        
-  print('Start:' + str(datetime.datetime.now()))
-  main()
-except KeyboardInterrupt:
-  pass
-finally:
-  LCD_BACKLIGHT = 0x00  #バックライトオフ
-  lcd_byte(0x01, LCD_CMD) #表示内容クリア
