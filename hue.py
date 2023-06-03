@@ -1,5 +1,6 @@
 import os
 import json
+from typing import Dict
 
 import requests
 
@@ -26,6 +27,14 @@ def turn_on_all_lights():
 
 def turn_off_all_lights():
     update_all_light_state(False)
+    
+
+def get_light_status():
+    response = requests.get(HUE_URL).json().items()
+    light_id_state: Dict[str,bool] = {} 
+    for id, val in response:
+        light_id_state[id] = val['state']['on']
+    return(light_id_state)
 
 
 def update_all_light_state(is_turn_on: bool):
@@ -36,7 +45,7 @@ def update_all_light_state(is_turn_on: bool):
 
 
 def main():
-    turn_on_all_lights()
+    get_light_status()
 
 
 if __name__ == "__main__":
