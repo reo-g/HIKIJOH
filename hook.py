@@ -5,11 +5,18 @@ from time import gmtime, strftime
 from lib.lcd import lcd_string
 import lib.lcd as lcd
 
+from remo_api import aircon_on, aircon_off
+
 def close_door_hook():
     show_datetime()
 
+    aircon_off()
+
 def open_door_hook():
     show_datetime()
+
+    aircon_on()
+
 
 def show_datetime(): #「日時」を表示
     local_time = datetime.datetime.now()
