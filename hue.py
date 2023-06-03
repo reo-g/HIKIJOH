@@ -4,13 +4,13 @@ import json
 import requests
 
 HUE_BRIDGE_IP_ADDRESS = "192.168.2.30"
-LIGHT_ID_NAMES = {
+LIGHT_ID_NAME = {
     "1": "Hue color lamp 1",
     "2": "Hue color lamp 2",
     "3": "Hue color lamp 3",
     "4": "Kotatsu 1",
-    "5": "Kotatsu 2",
-    "6": "Kotatsu 3",
+    "5": "Kotatsu 3",
+    "6": "Kotatsu 2",
     "7": "玄関1",
     "8": "玄関2",
     "9": "玄関3",
@@ -26,7 +26,7 @@ def turn_off_all_lights():
     update_all_light_state(False)
     
 def update_all_light_state(is_turn_on:bool):
-    for id in LIGHT_ID_NAMES.keys():
+    for id in LIGHT_ID_NAME.keys():
         light_url = HUE_URL + '/' + id + '/state'
         body      = json.dumps({"on":is_turn_on})
         requests.put(light_url, data=body)
