@@ -6,12 +6,18 @@ from lib.lcd import lcd_string
 import lib.lcd as lcd
 
 from hue import turn_on_all_lights, turn_off_all_lights
+from remo_api import aircon_on, aircon_off
 
 def close_door_hook():
     turn_off_all_lights()
 
+    aircon_off()
+
 def open_door_hook():
     turn_on_all_lights()
+
+    aircon_on()
+
 
 def show_datetime(): #「日時」を表示
     local_time = datetime.datetime.now()

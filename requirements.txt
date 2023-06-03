@@ -1,0 +1,8 @@
+flake8
+autopep8
+mypy
+pigpio
+pandas
+requests
+smbus2
+nfcpy
