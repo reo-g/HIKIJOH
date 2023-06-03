@@ -5,11 +5,13 @@ from time import gmtime, strftime
 from lib.lcd import lcd_string
 import lib.lcd as lcd
 
+from hue import turn_on_all_lights, turn_off_all_lights
+
 def close_door_hook():
-    show_datetime()
+    turn_off_all_lights()
 
 def open_door_hook():
-    show_datetime()
+    turn_on_all_lights()
 
 def show_datetime(): #「日時」を表示
     local_time = datetime.datetime.now()

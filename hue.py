@@ -1,6 +1,7 @@
 import os
-import requests
 import json
+
+import requests
 
 HUE_BRIDGE_IP_ADDRESS = "192.168.2.30"
 LIGHT_ID_NAMES = {
@@ -18,20 +19,20 @@ LIGHT_ID_NAMES = {
 HUE_BRIDGE_USERNAME = os.environ['HUE_BRIDGE_USERNAME']
 HUE_URL = "http://"+HUE_BRIDGE_IP_ADDRESS+"/api/"+HUE_BRIDGE_USERNAME+"/lights"
 
-def all_light_on():
-    update_all_light(True)
+def turn_on_all_lights():
+    update_all_light_state(True)
     
-def all_light_off():
-    update_all_light(False)
+def turn_off_all_lights():
+    update_all_light_state(False)
     
-def update_all_light(is_light_on:bool):
+def update_all_light_state(is_turn_on:bool):
     for id in LIGHT_ID_NAMES.keys():
         light_url = HUE_URL + '/' + id + '/state'
-        body      = json.dumps({"on":is_light_on})
+        body      = json.dumps({"on":is_turn_on})
         requests.put(light_url, data=body)
         
 def main():
-    all_light_on()
+    turn_on_all_lights()
     
 if __name__ == "__main__":
     main()
