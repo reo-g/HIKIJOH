@@ -6,15 +6,19 @@ from lib.lcd import lcd_string
 import lib.lcd as lcd
 
 from hue import turn_on_all_lights, turn_off_all_lights
+from prometheus_exporter import set_door_metrics
+
 from remo_api import aircon_on, aircon_off
 
 
 def close_door_hook():
+    set_door_metrics(is_door_open=False)
     turn_off_all_lights()
     aircon_off()
 
 
 def open_door_hook():
+    set_door_metrics(is_door_open=True)
     turn_on_all_lights()
     aircon_on()
 
