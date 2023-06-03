@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import binascii
-import nfc
-import pigpio
+# import nfc
+# import pigpio
 from time import sleep
 import time
 
 import datetime
 import pandas as pd
 
-import lib.lcd as lcd
-from lib.lcd import lcd_byte, lcd_string, lcd_init
-from hook import open_door_hook, close_door_hook
+# import lib.lcd as lcd
+# from lib.lcd import lcd_byte, lcd_string, lcd_init
+# from hook import open_door_hook, close_door_hook
 
 
 from post_alert_to_slack import check_open
@@ -96,7 +96,6 @@ class NFC_Data:
         self.df=self.df.append({'registered_date':datetime.date.today(),'idm':idm} , ignore_index=True)
         self.df.to_csv('/home/pi/HIKIJOH/data/idm.csv')
 
-# もし開館時間の15分前になっても開館されていなかったら、開館者をメンションした上でslackに通知する
 
 def main():
     global LCD_BACKLIGHT
@@ -104,6 +103,8 @@ def main():
     door_isopen = True
     want_close = False
     card_istouch = False
+
+    check_open(door_isopen=door_isopen)
 
     card = NFC_CARD()
     servo = Servo()
@@ -200,9 +201,12 @@ def main():
                 lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
         
         # 開館から3時間経過するまでの間にドアが開いていない場合は10分間隔でSlackに通知
-        check_open(door_isopen=door_isopen)
+        # check_open(door_isopen=door_isopen)
         
-        
+def test_check_open():
+    door_isopen = False
+    check_open(door_isopen=door_isopen)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    test_check_open()
