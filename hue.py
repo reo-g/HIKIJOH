@@ -12,9 +12,9 @@ LIGHT_ID_NAME = {
     "4": "Kotatsu 1",
     "5": "Kotatsu 3",
     "6": "Kotatsu 2",
-    "7": "玄関1",
-    "8": "玄関2",
-    "9": "玄関3",
+    "7": "Entrance 1",
+    "8": "Entrance 2",
+    "9": "Entrance 3",
 }
 
 HUE_BRIDGE_USERNAME = os.environ['HUE_BRIDGE_USERNAME']

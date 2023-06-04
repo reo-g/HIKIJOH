@@ -12,6 +12,7 @@ import datetime
 import lib.lcd as lcd
 from lib.lcd import lcd_byte, lcd_string, lcd_init
 from hook import open_door_hook, close_door_hook
+from prometheus_exporter import start_prometheus_exporter
 
 class Servo:
     #set servo PIN
@@ -101,6 +102,8 @@ def main():
     card = NFC_CARD()
     servo = Servo()
     nfc_data = NFC_Data()
+
+    start_prometheus_exporter()
 
     lcd_init()
     servo.door_open() ##最初は開けておく

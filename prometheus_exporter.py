@@ -20,18 +20,18 @@ def set_aircon_metrics(aircon_state: Dict[str,str]):
     
 
 def start_prometheus_exporter():
+    global IS_DOOR_OPEN, AIRCON_TEMP, IS_LIGHT_ON
     start_http_server(8000)
     IS_DOOR_OPEN = Summary(
         'is_door_open',  # name
         'whether door is open(=1) or close(=0)'  # description
     )
-    for light_id, name in LIGHT_ID_NAME:
+    for light_id, name in LIGHT_ID_NAME.items():
         IS_LIGHT_ON[light_id] = Summary(
-            'is_' + name + '_on',  # name
+            'is_' + name.replace(" ", "_") + '_on',  # name
             'whether light is on(=1) or off(=0)'  # description
         )
     AIRCON_TEMP = Summary(
         'aircon_temperature',  # name
         'temperature of air conditioner'  # description
     )
-    
