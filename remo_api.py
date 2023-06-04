@@ -40,7 +40,10 @@ def aircon_off():
 
     # conn.getresponse()
     response = conn.getresponse()
-    aircon_state = response.read().items()
+    aircon_state = response.read()
+    print(aircon_state)
+    aircon_state = aircon_state.json().items()
+    print(aircon_state)
     set_aircon_metrics(aircon_state)
     return aircon_state
   
