@@ -200,13 +200,13 @@ def main():
                 LCD_BACKLIGHT = 0x00  #バックライトオフ
                 lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
         
-        # 開館から3時間経過するまでの間にドアが開いていない場合は10分間隔でSlackに通知
-        # check_open(door_isopen=door_isopen)
+        # 開館の20分前から3時間後までの間にドアが開いていない場合はSlackに通知
+        check_open(door_isopen=door_isopen)
         
-def test_check_open():
-    door_isopen = False
-    check_open(door_isopen=door_isopen)
+# def test_check_open():
+#     door_isopen = False
+#     check_open(door_isopen=door_isopen)
 
 if __name__ == '__main__':
-    # main()
-    test_check_open()
+    main()
+    # test_check_open()

@@ -3,15 +3,29 @@ from datetime import datetime, timedelta, tzinfo
 from time import sleep
 from typing import Dict, List, Optional
 
-import click
+import csv
 import dateutil.parser
 import pytz
 import requests
 from requests.auth import HTTPBasicAuth
 
-SCHEDULE_LINK = 'https://camph.net/schedule/'
-SLACK_LINK = 'https://slack.com/api/chat.postMessage'
+
 WEEKDAY_NAMES = ['月', '火', '水', '木', '金', '土', '日']
+TIME_ZONE = "Asia/Tokyo"
+
+# カレンダー
+CAL_USER = "camphor"
+CAL_PASSWORD = "borYgrsnVzDV6L4cBAua"
+CAL_LINK = "https://cal.camph.net/private/schedule.json"
+
+# Slack_API
+# SLACK_TOKEN = "xoxb-2394892667-5391969742704-OuvlwsP7IDWBQVv6BY7Hj472"
+# SLACK_CHANNEL = "hackathon-202306"
+SLACK_LINK = "https://slack.com/api/chat.postMessage"
+
+# 自分のワークスペース
+SLACK_TOKEN = "xoxb-5361892917504-5380546263937-JKy4RLibR22O2wjzXJnj4e1h"
+SLACK_CHANNEL = "general"
 
 class Event:
     start: datetime
@@ -76,10 +90,12 @@ def divide_events_by_title(events: List[Event]) -> Dict[str, List[Event]]:
     return events_by_title
 
 
-def download_events(url: str) -> Optional[List[Event]]:
-    CAL_USER = 'camphor'
-    CAL_PASSWORD = 'borYgrsnVzDV6L4cBAua'
+def get_japanese_weekday(day: int) -> str:
+    return WEEKDAY_NAMES[day]
 
+
+def download_events(url: str) -> Optional[List[Event]]:
+    # BASIC認証
     auth = HTTPBasicAuth(CAL_USER, CAL_PASSWORD)
     response = requests.get(url, auth=auth)
     if response.status_code != requests.codes.ok:
@@ -87,90 +103,34 @@ def download_events(url: str) -> Optional[List[Event]]:
     return [Event.from_json(e) for e in response.json()]
 
 
-def get_japanese_weekday(day: int) -> str:
-    return WEEKDAY_NAMES[day]
-
-
-def validate_datetime(ctx, param, value) -> Optional[datetime]:
-    if value is None:
-        return None
-    try:
-        dt = dateutil.parser.parse(value)
-    except ValueError:
-        ctx.fail(f"Failed to parse '{value}'")
-    return dt  # WARNING: tzinfo might be None
-
-
 def post_alert_to_slack(message: str) -> None:
-    TOKEN = "xoxb-2394892667-5391969742704-OuvlwsP7IDWBQVv6BY7Hj472"
-    CHANNEL = "hackathon-202306"
-
     url = SLACK_LINK
-    headers = {"Authorization": "Bearer "+TOKEN}
+    headers = {"Authorization": "Bearer " + SLACK_TOKEN}
     data = {
-        "channel": CHANNEL, 
+        "channel": SLACK_CHANNEL, 
         "text": message,
-        # "blocks": [{"type": "section", "text": {"type": "plain_text", "text": message}}]
     }
 
     r = requests.post(url=url, headers=headers, data=data)
     print('return', r.json())
-    
-# def get_userID_from_slack(email: str) -> str:
-#     TOKEN = "xoxb-2394892667-5391969742704-OuvlwsP7IDWBQVv6BY7Hj472"
-#     ADDRESS = "dhurarara1229@outlook.jp"
-#     url = "https://slack.com/api/users.lookupByEmail"
-#     headers = {"Authorization": "Bearer "+TOKEN}
-#     data = {"email": ADDRESS}
-    
-#     r = requests.get(url=url, headers=headers, data=data)
-#     return r.json
 
 
-# COA: CAMPHOR- Open Alert
-# @click.command(help="CAMPHOR- Open Alert")
-# @click.option("--url", default="https://cal.camph.net/public/schedule.json",
-#               envvar="COA_URL", 
-#               help="URL of a schedule file.")
-# @click.option("--api-key", type=click.STRING,
-#               envvar="COA_API_KEY", 
-#               help="Slack API Key.")
-# @click.option("--api-secret", type=click.STRING,
-#               envvar="COA_API_SECRET", 
-#               help="Slack API Secret.")
-# @click.option("--access-token", type=click.STRING,
-#               envvar="COA_ACCESS_TOKEN", 
-#               help="Slack Access Token.")
-# @click.option("--access-token-secret", type=click.STRING,
-#               envvar="COA_ACCESS_TOKEN_SECRET",
-#               help="Slack Access Token Secret.")
-# @click.option("--dry-run", "-n", default=False, is_flag=True,
-#               help="Write messages to stdout.")
-# @click.option("--timezone", default="Asia/Tokyo",
-#               help="Time zone used to show time. (default: Asia/Tokyo)")
-# @click.option("--now", callback=validate_datetime,
-#               help="Specify current time for debugging. (example: 2017-01-01)")
-# @click.option("--week", default=False, is_flag=True,
-#               envvar="COA_WEEK", help="Notify weekly schedule.")
 def check_open(door_isopen: bool):
-    
-    private_cal_url = "https://cal.camph.net/private/schedule.json"
-    timezone = "Asia/Tokyo"
-    
-    private_events = download_events(private_cal_url)
-    
-    tz = pytz.timezone(timezone)
+    tz = pytz.timezone(TIME_ZONE)
     now = datetime.now(tz=tz)
     # if now is None:
     #     now = datetime.now(tz=tz)
     # elif now.tzinfo is None:
     #     now = now.replace(tzinfo=tz)
     
+    # イベントの取得
+    events = download_events(CAL_LINK)
     events = list(filter(
                     lambda e: e.start.astimezone(tz).date()
-                    == now.astimezone(tz).date(), private_events))
+                    == now.astimezone(tz).date(), events))
     events_by_title = divide_events_by_title(events)
-    
+
+    # 時間の取得
     open_events = events_by_title["open"]
     if len(open_events) == 1:
         open_event = open_events[0]
@@ -186,41 +146,52 @@ def check_open(door_isopen: bool):
     elif len(open_events) > 1:
         raise ValueError("The maximum number of Open events per day is"
                             " one, but found several.")
+    elif len(open_events) == 0:
+        open_start = None
+        make_start = None
     
-    # other_events = events_by_title["other"]
-    # if len(other_events) == 1:
-    #     other_event = other_events[0]
-    #     other_start = other_event.get_start(tz)
-    # elif len(other_events) > 1:
-    #     raise ValueError("The maximum number of Other events per day"
-    #                         " is one, but found several.")
+    open_start = "15:00"
     
-    # 開館の20分前から3時間後までの間にドアが開いていない場合はSlackに通知
-    # 通常開館以外のイベントも同様に扱う？
-    opener = ''.join(events_by_title["open"][0].opener)
-    print(events_by_title["open"][0].opener)
-    
-    
-    
-    
-    # TODO: User IDを取得する方法を考える
-    message = "<@U04FC0K2D1C>" + " 開館されていません"
-    
-    alert_interval_minutes = 10 * 60
-    before_alert_minutes = 20
-    before_delta = timedelta(minutes=before_alert_minutes)
-    after_alert_hour = 7
-    after_delta = timedelta(hours=after_alert_hour)
-    
-    open_start = datetime.strptime(open_start, '%H:%M')
-    dt_open_start = datetime.now().replace(hour=open_start.hour, minute=open_start.minute, second=0, microsecond=0).astimezone(tz) 
-    
-    if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
-        post_alert_to_slack(message=message)
-    
-    print('finished')
-    
-    sleep(alert_interval_minutes)
-    
+    if open_start is None:
+        pass
+    else:
+        # 開館の20分前から3時間後までの間にドアが開いていない場合はSlackに通知
+        # try:
+        #     opener = ''.join(events_by_title["open"][0].opener)
+        # except:
+        #     raise ValueError("Member is not found.")
+        
+        # テスト
+        opener = "@Tomo"
+        
+        # user_IDの取得
+        with open('members_ID.csv') as f:
+            reader = csv.reader(f)
+            members = [row for row in reader]
+        
+        for user, id_ in members:
+            if user == opener:
+                id = id_
 
-
+        # message通知の時間設定
+        alert_interval_minutes = 10 * 60
+        before_alert_minutes = 10
+        before_delta = timedelta(minutes=before_alert_minutes)
+        after_alert_hour = 3
+        after_delta = timedelta(hours=after_alert_hour)
+        
+        # テスト
+        before_delta = timedelta(hours=24)
+        after_delta = timedelta(hours=24)
+    
+        open_start = datetime.strptime(open_start, '%H:%M')
+        dt_open_start = datetime.now().replace(hour=open_start.hour, minute=open_start.minute, second=0, microsecond=0).astimezone(tz) 
+    
+        # messageの通知
+        message = f"<@{id}>" + " 開館されていません"
+        # テスト
+        message = "<@channel>" + " 開館されていません" 
+        if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
+            post_alert_to_slack(message=message)
+        
+        sleep(alert_interval_minutes)
