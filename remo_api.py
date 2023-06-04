@@ -1,5 +1,6 @@
 import http.client
 import os
+import json
 
 from prometheus_exporter import set_aircon_metrics
 
@@ -19,7 +20,7 @@ def aircon_on():
 
     # conn.getresponse()
     response = conn.getresponse()
-    aircon_state = response.read().items() 
+    aircon_state = json.loads(response.read().decode())
     set_aircon_metrics(aircon_state)
     return aircon_state
 
@@ -40,10 +41,7 @@ def aircon_off():
 
     # conn.getresponse()
     response = conn.getresponse()
-    aircon_state = response.read()
-    print(aircon_state)
-    aircon_state = aircon_state.json().items()
-    print(aircon_state)
+    aircon_state = json.loads(response.read().decode())
     set_aircon_metrics(aircon_state)
     return aircon_state
   
