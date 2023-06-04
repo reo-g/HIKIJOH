@@ -202,11 +202,7 @@ def main():
         
         # 開館の20分前から3時間後までの間にドアが開いていない場合はSlackに通知
         check_open(door_isopen=door_isopen)
-        
-# def test_check_open():
-#     door_isopen = False
-#     check_open(door_isopen=door_isopen)
+
 
 if __name__ == '__main__':
     main()
-    # test_check_open()

@@ -1,5 +1,6 @@
 import textwrap
 from datetime import datetime, timedelta, tzinfo
+import os
 from time import sleep
 from typing import Dict, List, Optional
 
@@ -14,18 +15,14 @@ WEEKDAY_NAMES = ['月', '火', '水', '木', '金', '土', '日']
 TIME_ZONE = "Asia/Tokyo"
 
 # カレンダー
-CAL_USER = "camphor"
-CAL_PASSWORD = "borYgrsnVzDV6L4cBAua"
+CAL_USER = os.environ["CAL_USER"]
+CAL_PASSWORD = os.environ["CAL_PASSWORD"]
 CAL_LINK = "https://cal.camph.net/private/schedule.json"
 
 # Slack_API
-# SLACK_TOKEN = "xoxb-2394892667-5391969742704-OuvlwsP7IDWBQVv6BY7Hj472"
-# SLACK_CHANNEL = "hackathon-202306"
+SLACK_TOKEN = os.environ["SLACK_TOKEN"]
+SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
 SLACK_LINK = "https://slack.com/api/chat.postMessage"
-
-# 自分のワークスペース
-SLACK_TOKEN = "xoxb-5361892917504-5380546263937-JKy4RLibR22O2wjzXJnj4e1h"
-SLACK_CHANNEL = "general"
 
 class Event:
     start: datetime
@@ -150,7 +147,9 @@ def check_open(door_isopen: bool):
         open_start = None
         make_start = None
     
+    # テスト
     open_start = "15:00"
+    opener = "@Tomo"
     
     if open_start is None:
         pass
@@ -160,9 +159,6 @@ def check_open(door_isopen: bool):
         #     opener = ''.join(events_by_title["open"][0].opener)
         # except:
         #     raise ValueError("Member is not found.")
-        
-        # テスト
-        opener = "@Tomo"
         
         # user_IDの取得
         with open('members_ID.csv') as f:
@@ -190,7 +186,7 @@ def check_open(door_isopen: bool):
         # messageの通知
         message = f"<@{id}>" + " 開館されていません"
         # テスト
-        message = "<@channel>" + " 開館されていません" 
+        # message = "<@channel>" + " 開館されていません" 
         if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
             post_alert_to_slack(message=message)
         
