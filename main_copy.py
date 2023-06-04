@@ -205,4 +205,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    check_open(door_isopen=False)
