@@ -34,7 +34,8 @@ def get_light_status():
     light_id_state: Dict[str,bool] = {} 
     for id, val in response:
         light_id_state[id] = val['state']['on']
-    return(light_id_state)
+    print(type(light_id_state['1']))
+    return light_id_state
 
 
 def update_all_light_state(is_turn_on: bool):
