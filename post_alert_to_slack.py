@@ -189,3 +189,9 @@ def check_open(door_isopen: bool):
         # message = "<@channel>" + " 開館されていません" 
         # if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
         post_alert_to_slack(message=message)
+
+
+def open_slack():
+    post_alert_to_slack("解錠されました")
+def close_slack()
+    post_alert_to_slack("施錠されました")
