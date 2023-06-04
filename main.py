@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import binascii
-# import nfc
-# import pigpio
+import nfc
+import pigpio
 from time import sleep
 import time
 
 import datetime
 import pandas as pd
 
-# import lib.lcd as lcd
-# from lib.lcd import lcd_byte, lcd_string, lcd_init
-# from hook import open_door_hook, close_door_hook
+import lib.lcd as lcd
+from lib.lcd import lcd_byte, lcd_string, lcd_init
+from hook import open_door_hook, close_door_hook
 
 
 from post_alert_to_slack import check_open
@@ -199,11 +199,10 @@ def main():
                 want_close = False
                 LCD_BACKLIGHT = 0x00  #バックライトオフ
                 lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
-        
+
         # 開館の20分前から3時間後までの間にドアが開いていない場合はSlackに通知
         check_open(door_isopen=door_isopen)
 
 
 if __name__ == '__main__':
-    # main()
-    check_open(door_isopen=False)
+    main()

@@ -161,13 +161,13 @@ def check_open(door_isopen: bool):
         #     raise ValueError("Member is not found.")
         
         # user_IDの取得
-        with open('members_ID.csv') as f:
-            reader = csv.reader(f)
-            members = [row for row in reader]
-        
-        for user, id_ in members:
-            if user == opener:
-                id = id_
+        # with open('members_ID.csv') as f:
+        #     reader = csv.reader(f)
+        #     members = [row for row in reader]
+        # 
+        # for user, id_ in members:
+        #     if user == opener:
+        #         id = id_
 
         # message通知の時間設定
         alert_interval_minutes = 10 * 60
@@ -175,19 +175,17 @@ def check_open(door_isopen: bool):
         before_delta = timedelta(minutes=before_alert_minutes)
         after_alert_hour = 3
         after_delta = timedelta(hours=after_alert_hour)
-        
+
         # テスト
         before_delta = timedelta(hours=24)
         after_delta = timedelta(hours=24)
-    
+
         open_start = datetime.strptime(open_start, '%H:%M')
         dt_open_start = datetime.now().replace(hour=open_start.hour, minute=open_start.minute, second=0, microsecond=0).astimezone(tz) 
-    
+
         # messageの通知
-        message = f"<@{id}>" + " 開館されていません"
+        message = "@channel 開館されていません"
         # テスト
         # message = "<@channel>" + " 開館されていません" 
-        if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
-            post_alert_to_slack(message=message)
-        
-        sleep(alert_interval_minutes)
+        # if (dt_open_start - before_delta <= now <= dt_open_start + after_delta) and (not door_isopen):
+        post_alert_to_slack(message=message)
