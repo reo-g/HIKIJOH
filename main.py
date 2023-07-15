@@ -9,8 +9,8 @@ import datetime
 import pandas as pd
 import datetime
 
-import lib.lcd as lcd
-from lib.lcd import lcd_byte, lcd_string, lcd_init
+# import lib.lcd as lcd
+# from lib.lcd import lcd_byte, lcd_string, lcd_init
 from hook import open_door_hook, close_door_hook
 from prometheus_exporter import start_prometheus_exporter
 
@@ -105,66 +105,66 @@ def main():
 
     start_prometheus_exporter()
 
-    lcd_init()
+    # lcd_init()
     servo.door_open() ##最初は開けておく
     
-    lcd_string("   Welcome to   ", lcd.LCD_LINE_1)
-    lcd_string(" CAMPHOR- LOCK ", lcd.LCD_LINE_2)
+    # lcd_string("   Welcome to   ", lcd.LCD_LINE_1)
+    # lcd_string(" CAMPHOR- LOCK ", lcd.LCD_LINE_2)
 
     sleep(1) #LCDを1秒間点灯
     LCD_BACKLIGHT = 0x00  #バックライトオフ
-    lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
+    # lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
 
     while True:
         ret = card.nfc_process()
         if ret is not None:
             card_istouch = True
             card_touched_time = time.time()
-            LCD_BACKLIGHT  = 0x08  # On
-            lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
+            # LCD_BACKLIGHT  = 0x08  # On
+            # lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
             is_timeout = False
 
             if nfc_data.check_registered(ret): #idmがすでに登録されているカードだったら
                 if want_close == True and door_isopen == True:
-                    lcd_string(" GOOD BYE >_< ", lcd.LCD_LINE_1)
-                    lcd_string(" SEE YOU AGAIN ", lcd.LCD_LINE_2)
+                    # lcd_string(" GOOD BYE >_< ", lcd.LCD_LINE_1)
+                    # lcd_string(" SEE YOU AGAIN ", lcd.LCD_LINE_2)
                     servo.door_close()
                     door_isopen = False
                     want_close = False
 
                 elif want_close == False and door_isopen == False:
-                    lcd_string("   Welcome to   ", lcd.LCD_LINE_1)
-                    lcd_string(" CAMPHOR- HOUSE ", lcd.LCD_LINE_2)
+                    # lcd_string("   Welcome to   ", lcd.LCD_LINE_1)
+                    # lcd_string(" CAMPHOR- HOUSE ", lcd.LCD_LINE_2)
                     servo.door_open()
                     door_isopen = True
                     
             else: #登録されていないカードだったら
-                lcd_string("  THIS CARD IS  ", lcd.LCD_LINE_1)
-                lcd_string(" NOT REGISTERED ", lcd.LCD_LINE_2)
+                # lcd_string("  THIS CARD IS  ", lcd.LCD_LINE_1)
+                # lcd_string(" NOT REGISTERED ", lcd.LCD_LINE_2)
                 while True: #5秒間ボタン入力を受け付ける
                     if servo.switch_status(): #ボタンの入力がされたら
-                        lcd_string(" PLEASE TOUCH  ", lcd.LCD_LINE_1)
-                        lcd_string(" REGISTERED CARD", lcd.LCD_LINE_2)
+                        # lcd_string(" PLEASE TOUCH  ", lcd.LCD_LINE_1)
+                        # lcd_string(" REGISTERED CARD", lcd.LCD_LINE_2)
                         wait_master_time = time.time()
 
                         while True: #すでに登録されたカードのタッチを15秒待つ
                             ret_m = card.nfc_process()
                             if time.time() - wait_master_time > 15:
                                 is_timeout = True
-                                lcd_string("REGISTERATION IS", lcd.LCD_LINE_1)
-                                lcd_string(" TIMEOUT... >_< ", lcd.LCD_LINE_2)
+                                # lcd_string("REGISTERATION IS", lcd.LCD_LINE_1)
+                                # lcd_string(" TIMEOUT... >_< ", lcd.LCD_LINE_2)
                                 break
                             if ret_m is not None:
                                 if nfc_data.check_registered(ret_m): #idmがすでに登録されているカードだったら
                                     nfc_data.registering_card(ret) #元々タッチされたカードを追加する
-                                    lcd_string(" THIS CARD IS  ", lcd.LCD_LINE_1)
-                                    lcd_string("REGISTERED! ^o^ ", lcd.LCD_LINE_2)
+                                    # lcd_string(" THIS CARD IS  ", lcd.LCD_LINE_1)
+                                    # lcd_string("REGISTERED! ^o^ ", lcd.LCD_LINE_2)
                                     sleep(1)
                                     is_timeout = True #ループから抜けるために便宜上
                                     break
-                                else:
-                                    lcd_string(" THIS CARD IS  ", lcd.LCD_LINE_1)
-                                    lcd_string(" NOT MASTER CARD ", lcd.LCD_LINE_2)
+                                # else:
+                                #     lcd_string(" THIS CARD IS  ", lcd.LCD_LINE_1)
+                                #     lcd_string(" NOT MASTER CARD ", lcd.LCD_LINE_2)
   
                     if time.time() - card_touched_time > 5:
                         is_timeout = True
@@ -177,14 +177,14 @@ def main():
                 #LCDの焼け付きを防止するために消す
                 card_istouch = False
                 LCD_BACKLIGHT = 0x00  #バックライトオフ
-                lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
+                # lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
 
         if servo.switch_status():
             if want_close != True:
                 LCD_BACKLIGHT  = 0x08  # On
-                lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
-                lcd_string("HOUSE CLOSE MODE", lcd.LCD_LINE_1)
-                lcd_string(" TOUCH KEY ^o^ ", lcd.LCD_LINE_2)
+                # lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア
+                # lcd_string("HOUSE CLOSE MODE", lcd.LCD_LINE_1)
+                # lcd_string(" TOUCH KEY ^o^ ", lcd.LCD_LINE_2)
                 want_close_time = time.time()
                 want_close = True
 
@@ -192,8 +192,8 @@ def main():
             if time.time() - want_close_time > 60:
                 #LCDの焼け付きを防止するために消す
                 want_close = False
-                LCD_BACKLIGHT = 0x00  #バックライトオフ
-                lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア    
+                # LCD_BACKLIGHT = 0x00  #バックライトオフ
+                # lcd_byte(0x01, lcd.LCD_CMD) #表示内容クリア    
 
 
 
