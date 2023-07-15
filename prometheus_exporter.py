@@ -9,9 +9,9 @@ ON_STATE = "on"
 OFF_STATE = "off"
 
 # initialize metrics
-IS_DOOR_OPEN = Enum("is_door_open","hogehoge",states=[OPEN_STATE, CLOSED_STATE])
-IS_LIGHT_ON = []
-AIRCON_TEMP = Gauge("aircon_temp","fugafuga")
+IS_DOOR_OPEN = ""
+IS_LIGHT_ON = {}
+AIRCON_TEMP = ""
 # IS_DOOR_OPEN = 0
 # IS_LIGHT_ON = {}
 # AIRCON_TEMP = 0
@@ -65,11 +65,11 @@ def set_door_metrics_closed():
 # after
 def set_light_metrics_on():
     global IS_LIGHT_ON
-    for light_id, _ in LIGHT_ID_NAME:
+    for light_id, _ in LIGHT_ID_NAME.items():
         IS_LIGHT_ON[light_id].state(ON_STATE)
 
 
 def set_light_metrics_off():
     global IS_LIGHT_ON
-    for light_id, _ in LIGHT_ID_NAME:
+    for light_id, _ in LIGHT_ID_NAME.items():
         IS_LIGHT_ON[light_id].state(OFF_STATE)
